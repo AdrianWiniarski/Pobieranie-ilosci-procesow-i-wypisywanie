@@ -1,0 +1,25 @@
+// Ilustracja działania funkcji execl – uruchomienie programu potomny 
+#include <stdio.h> 
+//#include <process.h> 
+#include <unistd.h> 
+#include <sys/wait.h>
+#include <sys/types.h>
+#include <stdlib.h>
+
+void main(int argc, char* argv[]){ 
+  int pid,status,i,j;
+  char str[1];
+  for(i=0; i<argc; ++i){
+     if((pid = fork()) == 0) { /* Proces potomny pot ---*/ 
+     execl("pot","pot",str,argv[i+1],NULL); 
+     }
+  }   
+   for(j=1; j<=atoi(argv[1]); ++j){
+   printf("Macierzysty = %d, krok = %d \n",getpid(),j);
+   sleep(1);   
+   }
+   for(i=0; i<argc-1;++i){
+    pid = wait(&status); 
+    printf("Proces %d zakończony status: %d\n",pid,status/256); 
+   }
+} 
